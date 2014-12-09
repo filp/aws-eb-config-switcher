@@ -12,8 +12,11 @@ CONFIG="./.elasticbeanstalk"
 function usage
 {
   echo
-  echo "usage: eb-config stash   <name>"
-  echo "usage: eb-config recover <name>"
+  echo "usage: eb-config stash   <name>  | stash the current configuration away"
+  echo "usage: eb-config recover <name>  | recover a configuration by name"
+  echo "usage: eb-config ls              | list all stashed configurations"
+  echo "usage: eb-config peek            | output the full content of the configuration top level"
+  echo "usage: eb-config help            | show this thing"
   echo
 }
 
