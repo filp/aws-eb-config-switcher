@@ -1,0 +1,87 @@
+#!/bin/bash
+# Utility to manage multiple elastic beanstalk configurations
+# for the same project.
+
+set -e
+
+STASH="$HOME/.elasticbeanstalk-configs"
+BACKUP_STASH="$STASH/last-stash-override"
+BACKUP_CONFIG="$STASH/last-config-override"
+CONFIG="./.elasticbeanstalk"
+
+function usage
+{
+  echo
+  echo "usage: eb-config stash   <name>"
+  echo "usage: eb-config recover <name>"
+  echo
+}
+
+function test_has_config
+{
+  if [ ! -d "$CONFIG" ]; then
+    echo "No .elasticbeanstalk in this directory, nothing to work with"
+    exit 1
+  fi
+}
+
+function in_stash_or_fail
+{
+  if [ ! -d "$STASH/$1" ]; then
+    echo "No such configuration in stash: $1"
+    exit 1
+  fi
+}
+
+function stash
+{
+  test_has_config
+
+  if [ -d "$STASH/$1" ]; then
+    mv "$STASH/$1" "$BACKUP_STASH"
+    echo "Backed up previous stash with same name to $BACKUP_STASH"
+  fi
+
+  cp -r "$CONFIG" "$STASH/$1"
+}
+
+function recover
+{
+  in_stash_or_fail $1
+
+  if [ -d $CONFIG ]; then
+    mv "$CONFIG" "$BACKUP_CONFIG"
+    echo "Backed up previous config to $BACKUP_CONFIG"
+  fi
+
+  cp -r "$STASH/$1" "$CONFIG"
+}
+
+function list_stash
+{
+  ls -1 "$STASH"
+}
+
+function peek
+{
+  echo $(cd $CONFIG && ls -1 | xargs cat $1)
+}
+
+if [ ! -d $STASH ]; then
+  mkdir $STASH
+fi
+
+case $1 in
+  "recover" )
+    recover $2 ;;
+  "stash" )
+    stash $2 ;;
+  "ls" )
+    list_stash ;;
+  "help" )
+    usage ;;
+  "peek" )
+    peek ;;
+  * )
+    usage ;;
+esac
