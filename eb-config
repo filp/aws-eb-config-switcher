@@ -41,6 +41,7 @@ function stash
   test_has_config
 
   if [ -d "$STASH/$1" ]; then
+    rm -r "$BACKUP_STASH"
     mv "$STASH/$1" "$BACKUP_STASH"
     echo "Backed up previous stash with same name to $BACKUP_STASH"
   fi
@@ -53,6 +54,7 @@ function recover
   in_stash_or_fail $1
 
   if [ -d $CONFIG ]; then
+    rm -r "$BACKUP_CONFIG"
     mv "$CONFIG" "$BACKUP_CONFIG"
     echo "Backed up previous config to $BACKUP_CONFIG"
   fi
