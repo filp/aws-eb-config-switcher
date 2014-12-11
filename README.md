@@ -8,8 +8,11 @@ folders for the same project in a consistent and safe manner.
 ```shell
 $ eb-config help
 
-usage: eb-config stash   <name>
-usage: eb-config recover <name>
+usage: eb-config stash   <name>  | stash the current configuration away
+usage: eb-config recover <name>  | recover a configuration by name
+usage: eb-config ls              | list all stashed configurations
+usage: eb-config peek            | output the full content of the configuration top level
+usage: eb-config help            | show this thing
 ```
 
 ## License
